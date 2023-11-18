@@ -104,7 +104,7 @@ export class TelegramService {
         (weather.toLowerCase().includes('haze') && '🌫️') ||
         (weather.toLowerCase().includes('fog') && '🌫️') ||
         'Unknown'
-      } ${weather}\n\n${wind_emoji} Wind:${current.wind_speed} km/h from ${
+      } ${weather}\n\n${wind_emoji} Wind: ${current.wind_speed} km/h from ${
         current.wind_dir
       }\n\n${uv_indicator} UV Index: ${current.uv_index} (${uv_category})`;
 
