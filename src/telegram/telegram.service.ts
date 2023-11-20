@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 const TelegramBot = require('node-telegram-bot-api');
 import axios from 'axios';
+import { UserService } from '../user/user.service';
 
 const TELEGRAM_TOKEN = '6622721403:AAGIMyx4ALUP9dUx_BTT4GgoXaV84GC4ydQ';
 const WEATHER_API_KEY = '35e8595a20f9b9894bf0b928935d9b67';
@@ -9,9 +10,8 @@ const WEATHER_API_KEY = '35e8595a20f9b9894bf0b928935d9b67';
 export class TelegramService {
   private readonly bot: any;
 
-  constructor() {
+  constructor(private readonly userService: UserService) {
     this.bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
-
     this.bot.on('message', this.onMessageReceived);
   }
 
@@ -20,12 +20,22 @@ export class TelegramService {
     const text = msg.text;
 
     if (text === '/start') {
+      const existingUser = await this.userService.findUserById(
+        msg.from.id.toString(),
+      );
+
+      if (!existingUser) {
+        // If the user doesn't exist, create a new user
+        await this.userService.createUser(
+          msg.from.username,
+          msg.from.id.toString(),
+        );
+
+        console.log(`New user created: ${msg.from.username}`);
+      }
+
       const greetingMessage = `Hello! Welcome to the Weather Bot. Type the name of a city to get its current weather.`;
       this.bot.sendMessage(chatId, greetingMessage);
-
-      console.log(
-        `New user joined. User ID: ${msg.from.id}, Username: ${msg.from.username}`,
-      );
     } else {
       await this.handleWeatherQuery(chatId, text);
     }
