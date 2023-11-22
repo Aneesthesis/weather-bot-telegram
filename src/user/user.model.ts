@@ -9,6 +9,9 @@ export class User extends Document {
   @Prop({ required: true })
   userId!: string;
 
+  @Prop({ required: true, default: new Date().toLocaleDateString('en-US') })
+  dateCreated!: string;
+
   @Prop({ required: true, default: false })
   isBlocked!: boolean;
 }

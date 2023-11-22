@@ -1,7 +1,7 @@
 {
   "name": "my-nest-app",
   "version": "0.0.1",
-  "description": "",
+  "description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo-small.svg\" width=\"200\" alt=\"Nest Logo\" /></a> </p>",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -21,11 +21,13 @@
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.1",
-    "@nestjs/common": "^10.2.8",
-    "@nestjs/core": "^10.2.8",
+    "@nestjs/common": "^10.2.10",
+    "@nestjs/core": "^10.2.10",
     "@nestjs/mongoose": "^10.0.2",
-    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-express": "^10.2.10",
     "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "mongoose": "^8.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
@@ -71,5 +73,10 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": []
 }

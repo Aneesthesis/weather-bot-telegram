@@ -19,11 +19,11 @@ export class TelegramService {
     const chatId = msg.chat.id;
     const text = msg.text;
 
-    if (text === '/start') {
-      const existingUser = await this.userService.findUserById(
-        msg.from.id.toString(),
-      );
+    const existingUser = await this.userService.findUserById(
+      msg.from.id.toString(),
+    );
 
+    if (text === '/start') {
       if (!existingUser) {
         // If the user doesn't exist, create a new user
         await this.userService.createUser(
@@ -37,6 +37,10 @@ export class TelegramService {
       const greetingMessage = `Hello! Welcome to the Weather Bot. Type the name of a city to get its current weather.`;
       this.bot.sendMessage(chatId, greetingMessage);
     } else {
+      if (existingUser && existingUser.isBlocked) {
+        this.bot.sendMessage(chatId, 'Sorry, the Admin has blocked you');
+        return;
+      }
       await this.handleWeatherQuery(chatId, text);
     }
   };
@@ -97,7 +101,7 @@ export class TelegramService {
 
       const responseMessage = ` ${
         current.is_day === 'yes' ? '🏙️' : '🌃'
-      } City: ${location.name}\n\n🌡️ Temperature: ${
+      } City: ${location.name}, ${location.country}\n\n🌡️ Temperature: ${
         current.temperature
       }°C (Feels like ${current.feelslike}°C)\n\n❔Weather now: ${
         (weather.toLowerCase().includes('clear') && isDay === 'yes' && '🌞') ||
