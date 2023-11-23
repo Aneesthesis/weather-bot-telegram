@@ -12,14 +12,14 @@ export class AdminController {
     @Res() res: Response,
   ) {
     try {
-      const admin = await this.AdminService.loginAdmin(
+      const adminToken = await this.AdminService.loginAdmin(
         body.email,
         body.password,
       );
 
-      if (admin) {
+      if (adminToken) {
         // Login successful
-        return res.status(200).json({ message: 'Admin login successful' });
+        return res.status(200).json(adminToken);
       } else {
         // Login failed
         return res.status(401).json({ message: 'Admin login failed' });

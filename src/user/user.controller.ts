@@ -3,20 +3,24 @@ import {
   Controller,
   Get,
   Post,
+  Headers,
   Put,
   Param,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
+import { log } from 'console';
 
 @Controller('/api/admin')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/users')
-  async userList() {
+  async userList(@Headers() headers: Record<string, string>) {
     try {
-      const users = await this.userService.findAllUsers();
+      const authorizationToken = JSON.stringify(headers.authorization);
+
+      const users = await this.userService.findAllUsers(authorizationToken);
       return { users };
     } catch (error) {
       console.error(
@@ -30,21 +34,25 @@ export class UserController {
   @Get('/users/:userId')
   async user(@Param('userId') userId: string) {
     try {
-      const users = await this.userService.findUserById(userId);
-      return { users };
+      const user = await this.userService.findUserById(userId);
+      return { user };
     } catch (error) {
-      console.error(
-        'Error while fetching all users:',
-        (error as Error).message,
-      );
-      return { users: [] };
+      console.error('Error while fetching user:', (error as Error).message);
+      return { user: [] };
     }
   }
 
   @Put('/users/:userId/toggleBlock')
-  async toggleBlock(@Param('userId') userId: string) {
+  async toggleBlock(
+    @Param('userId') userId: string,
+    @Headers() headers: Record<string, string>,
+  ) {
     try {
-      const updatedUser = await this.userService.toggleBlocking(userId);
+      const authorizationToken = JSON.stringify(headers.authorization);
+      const updatedUser = await this.userService.toggleBlocking(
+        userId,
+        authorizationToken,
+      );
       if (updatedUser) {
         return {
           success: true,
