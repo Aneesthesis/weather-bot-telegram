@@ -1,7 +1,6 @@
-import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Headers, Body, Res, Put } from '@nestjs/common';
 import { Response } from 'express';
 import { AdminService } from './admin.service';
-
 @Controller('/api')
 export class AdminController {
   constructor(private readonly AdminService: AdminService) {}
@@ -29,66 +28,51 @@ export class AdminController {
       return res.json({ message: 'Internal server error' });
     }
   }
+  @Get('/bot-token')
+  async apiKey(@Headers() headers: Record<string, string>) {
+    try {
+      const authorizationToken = JSON.stringify(headers.authorization);
+
+      const key = await this.AdminService.getAPIKey(authorizationToken);
+      return { key };
+    } catch (error) {
+      console.error('Error while fetching api key:', (error as Error).message);
+
+      if ((error as Error).message === 'Unauthorized') {
+        return {
+          status: 403,
+          message:
+            'Token invalid or might have expired. Log out and come back!',
+        };
+      }
+      return { error, status: 400 };
+    }
+  }
+
+  @Put('/bot-token')
+  async updateAPIKey(
+    @Headers() headers: Record<string, string>,
+    @Body() body: { new_api_key: string },
+  ) {
+    try {
+      const authorizationToken = JSON.stringify(headers.authorization);
+      const updatedAPIKey = await this.AdminService.updateAPIKey(
+        body.new_api_key,
+        authorizationToken,
+      );
+      return { updatedAPIKey };
+    } catch (error) {
+      console.error('Error while updating API key:', (error as Error).message);
+
+      if ((error as Error).message === 'Unauthorized') {
+        return {
+          status: 403,
+          message:
+            'Token invalid or might have expired. Log out and come back!',
+        };
+      }
+
+      return { error, status: 400 };
+    }
+  }
 }
-
-// import {
-//   Controller,
-//   Get,
-//   Post,
-//   Put,
-//   Param,
-//   InternalServerErrorException,
-// } from '@nestjs/common';
-// import { UserService } from '../user/user.service';
-
-// @Controller('/api/admin')
-// export class AdminController {
-//   constructor(private readonly userService: UserService) {}
-
-//   @Get('/users')
-//   async userList() {
-//     try {
-//       const users = await this.userService.findAllUsers();
-//       return { users };
-//     } catch (error) {
-//       console.error(
-//         'Error while fetching all users:',
-//         (error as Error).message,
-//       );
-//       return { users: [] };
-//     }
-//   }
-
-//   @Get('/users/:userId')
-//   async user(@Param('userId') userId: string) {
-//     try {
-//       const users = await this.userService.findUserById(userId);
-//       return { users };
-//     } catch (error) {
-//       console.error(
-//         'Error while fetching all users:',
-//         (error as Error).message,
-//       );
-//       return { users: [] };
-//     }
-//   }
-
-//   @Put('/users/:userId/toggleBlock')
-//   async toggleBlock(@Param('userId') userId: string) {
-//     try {
-//       const updatedUser = await this.userService.toggleBlocking(userId);
-//       if (updatedUser) {
-//         return {
-//           success: true,
-//           message: 'User blocking toggled successfully',
-//           updatedUser,
-//         };
-//       } else {
-//         return { success: false, message: 'User not found' };
-//       }
-//     } catch (error) {
-//       console.error('Error while toggling blocking for user:');
-//       throw new InternalServerErrorException('Error toggling user blocking');
-//     }
-//   }
-// }

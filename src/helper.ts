@@ -8,7 +8,7 @@ export function generateAuthToken(admin: any): string {
     email: admin.email,
   };
 
-  const token = jwt.sign(payload, secretKey, { expiresIn: '3h' });
+  const token = jwt.sign(payload, secretKey, { expiresIn: '24h' });
 
   return token;
 }

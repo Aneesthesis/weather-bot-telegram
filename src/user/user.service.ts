@@ -28,6 +28,8 @@ export class UserService {
         authorizationHeader.split(' ')[1].slice(0, -1),
       );
 
+      console.log(decodedToken);
+
       if (!decodedToken || !decodedToken.adminId) {
         throw new Error('Unauthorized');
       }

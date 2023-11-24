@@ -9,7 +9,6 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { log } from 'console';
 
 @Controller('/api/admin')
 export class UserController {
@@ -27,7 +26,15 @@ export class UserController {
         'Error while fetching all users:',
         (error as Error).message,
       );
-      return { users: [] };
+
+      if ((error as Error).message === 'Unauthorized') {
+        return {
+          status: 403,
+          message:
+            'Token invalid or might have expired. Log out and come back!',
+        };
+      }
+      return { status: 403, error };
     }
   }
 
@@ -38,7 +45,7 @@ export class UserController {
       return { user };
     } catch (error) {
       console.error('Error while fetching user:', (error as Error).message);
-      return { user: [] };
+      return { error };
     }
   }
 

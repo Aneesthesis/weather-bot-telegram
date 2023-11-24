@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 import axios from 'axios';
 import { UserService } from '../user/user.service';
 
-const TELEGRAM_TOKEN = '6622721403:AAGIMyx4ALUP9dUx_BTT4GgoXaV84GC4ydQ';
+const TELEGRAM_TOKEN = '6622721403:AAEnqezuVUX9iTEaZVe4hKs7Lzfkze9dvI0';
 const WEATHER_API_KEY = '35e8595a20f9b9894bf0b928935d9b67';
 
 @Injectable()
