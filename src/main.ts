@@ -6,7 +6,7 @@ import { ImATeapotException } from '@nestjs/common/exceptions';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const whitelist = 'http://localhost:3001';
+  const whitelist = 'https://aneesweatherbot.onrender.com/';
 
   app.enableCors({
     methods: ['GET,HEAD,PUT,PATCH,POST,DELETE'],

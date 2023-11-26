@@ -66,6 +66,22 @@ export class AdminService {
     }
   }
 
+  async getAPIKeyBE(): Promise<string | null> {
+    try {
+      // Assuming you have a model for Admin and the API key is stored in a field called 'api_key'
+      const admin = await this.adminModel.findOne().exec();
+
+      if (!admin) {
+        throw new Error('Admin not found');
+      }
+
+      return admin.api_key;
+    } catch (error) {
+      console.error('Error while getting API key:', (error as Error).message);
+      return null;
+    }
+  }
+
   async updateAPIKey(
     updatedKey: string,
     authorizationHeader: string,

@@ -6,6 +6,7 @@ import { Admin, AdminSchema } from './admin.model';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../user/user.model';
 import { UserService } from '../user/user.service';
+import { TelegramService } from '../telegram/telegram.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { UserService } from '../user/user.service';
     ]),
   ],
   controllers: [AdminController],
-  providers: [AdminService, UserService],
+  providers: [AdminService, UserService, TelegramService],
   exports: [AdminService],
 })
 export class AdminModule {}
