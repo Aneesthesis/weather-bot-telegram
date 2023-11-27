@@ -6,10 +6,13 @@ import { ImATeapotException } from '@nestjs/common/exceptions';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const whitelist = 'https://aneesweatherbot.onrender.com/';
+  const whitelist = [
+    'https://aneesweatherbot.onrender.com/',
+    'http://localhost:3000',
+  ];
 
   app.enableCors({
-    methods: ['GET,HEAD,PUT,PATCH,POST,DELETE'],
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     origin: function (origin, callback) {
       if (!origin) {
         callback(null, true);
@@ -18,7 +21,7 @@ async function bootstrap() {
       if (whitelist.includes(origin)) {
         callback(null, true);
       } else {
-        console.log('not alowwed');
+        console.log('not allowed');
         callback(new ImATeapotException('not allowed'), false);
       }
     },
@@ -26,4 +29,5 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3000);
 }
+
 bootstrap();
